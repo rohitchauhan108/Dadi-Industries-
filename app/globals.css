@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Marcellus", "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-display: "Marcellus", Georgia, serif;
+  --font-editorial: "Cormorant Garamond", "Playfair Display", Georgia, serif;
+  --font-sans: "Outfit", "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-script: "Caveat", cursive;
+
+  --color-primary: #103C26;
+  --color-primary-dark: #0B2819;
+  --color-primary-forest: #16472F;
+  --color-primary-light: #1E5C3B;
+  --color-primary-leaf: #2F7A52;
+  --color-primary-sage: #587563;
+
+  --color-gold: #C69D32;
+  --color-gold-dark: #8F6B1C;
+  --color-gold-light: #E8C86A;
+  --color-gold-shimmer: #F3DD96;
+  --color-gold-soft: #FBF4E2;
+  --color-gold-subtle: #F5ECD4;
+
+  --color-cream: #FAF7F0;
+  --color-cream-card: #FFFFFF;
+  --color-soft-beige: #F3ECE0;
+  --color-soft-sand: #EAE1D0;
+
+  --color-turmeric: #D89824;
+  --color-chilli: #B9442C;
+  --color-dark-text: #14241B;
+  --color-muted-text: #5E6E64;
+}
+
+@layer base {
+  html {
+    font-size: 16px;
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background-color: var(--color-cream);
+    color: var(--color-dark-text);
+    font-size: 1rem;
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  p, li, span, button, input, textarea, select, label {
+    line-height: 1.6;;
+  }
+
+  h1, h2, h3, .font-serif, .font-display {
+    font-family: var(--font-serif);
+    letter-spacing: -0.01em;
+    line-height: 1.15;
+  }
+
+  .font-editorial {
+    font-family: var(--font-editorial);
+  }
+
+  .font-handwritten {
+    font-family: var(--font-script);
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #f3ece0;
+}
+::-webkit-scrollbar-thumb {
+  background: #c8d4cb;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #103C26;
+}
+
+@keyframes gold-shine {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.gold-gradient-text {
+  background: linear-gradient(135deg, #8F6B1C 0%, #C69D32 50%, #E8C86A 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}

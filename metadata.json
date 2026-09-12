@@ -1,0 +1,8 @@
+{
+  "name": "Remix Dadi Industries - Authentic Indian Achaar \u0026 Foods",
+  "description": "Premium traditional Indian achaar, pickles, chutneys and masalas crafted with authentic recipes and traditional taste: Ghar Ka Swaad, Har Nivaale Mein.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
