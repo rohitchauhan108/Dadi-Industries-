@@ -185,7 +185,7 @@ export const Header: React.FC = () => {
                 className="flex items-center gap-1.5 text-[#103C26] hover:text-[#0B2819] py-2 px-2.5 rounded-full font-serif font-bold text-xs transition-all cursor-pointer"
               >
                 <User className="w-7 h-7" />
-                <span className="hidden xl:inline">{user ? user.name : 'Login'}</span>
+                <span className="hidden xl:inline">{authLoading ? 'Login' : user ? user.name : 'Login'}</span>
               </button>
             </div>
 
