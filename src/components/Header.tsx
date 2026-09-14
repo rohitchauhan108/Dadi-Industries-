@@ -41,7 +41,7 @@ export const Header: React.FC = () => {
   }> = [
     { label: "Home", view: "home" },
     { label: "Shop Pickles", view: "shop" },
-    { label: "Our Storye", view: "story" },
+    { label: "Our Story", view: "story" },
     { label: "Why Dadi", view: "why-dadi" },
     { label: "Contact", view: "contact" },
   ];
