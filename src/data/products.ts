@@ -1,4 +1,4 @@
-import { Product, Category } from '../types';
+import { Product, ProductVariant, Category } from '../types';
 
 export const CATEGORIES: Category[] = [
   {
@@ -51,6 +51,7 @@ type ProductSeed = {
   categoryLabel: string;
   image: string;
   images: string[];
+  variants?: ProductVariant[];
   featured: boolean;
 };
 
@@ -535,6 +536,26 @@ const seedProducts: ProductSeed[] = [
     featured: false,
   },
 
+  // ---------------- MURABBA ----------------
+  {
+    id: 'amla-murabba-500gm',
+    name: 'Amla Murabba',
+    hindiName: 'आंवला मुरब्बा',
+    description: 'Traditional homemade Amla murabba prepared with whole amla and natural sweetness.',
+    price: 250,
+    originalPrice: 250,
+    weight: '500 g',
+    category: 'murabba',
+    categoryLabel: 'Murabba',
+    image: '/product/amla-murabba/1.webp',
+    images: [
+      '/product/amla-murabba/1.webp',
+      '/product/amla-murabba/2.webp',
+      '/product/amla-murabba/3.webp',
+    ],
+    featured: false,
+  },
+
   // ---------------- CHUTNEY ----------------
   {
     id: 'aam-lachedaar-chatuny-500gm',
@@ -557,19 +578,106 @@ const seedProducts: ProductSeed[] = [
   },
 ];
 
+const CHART_VARIANTS: Record<string, ProductVariant[]> = {
+  'aam-achaar': [
+    { weight: '1 Kg', price: 280, scheme: '5+1 Free', inStock: true },
+    { weight: '500 g', price: 160, inStock: true },
+    { weight: '250 g', price: 80, inStock: true },
+  ],
+  'sukha-aam-300gm': [
+    { weight: '1 Kg', price: 460, inStock: true },
+    { weight: '300 g', price: 180, inStock: true },
+  ],
+  'nimbu-achaar': [
+    { weight: '1 Kg', price: 280, inStock: true },
+    { weight: '500 g', price: 210, inStock: true },
+    { weight: '250 g', price: 90, inStock: true },
+  ],
+  'meetha-nimbu': [
+    { weight: '1 Kg', price: 320, inStock: true },
+    { weight: '500 g', price: 260, inStock: true },
+    { weight: '250 g', price: 120, inStock: true },
+  ],
+  'aam-lachedaar-chatuny-500gm': [
+    { weight: '1 Kg', price: 460, inStock: true },
+    { weight: '500 g', price: 230, inStock: true },
+    { weight: '250 g', price: 115, inStock: true },
+  ],
+  'hari-mirch': [
+    { weight: '1 Kg', price: 280, scheme: '5+1', inStock: true },
+    { weight: '500 g', price: 160, inStock: true },
+    { weight: '250 g', price: 80, inStock: true },
+  ],
+  'mix-achaar-500gm': [
+    { weight: '1 Kg', price: 280, scheme: '5+1', inStock: true },
+    { weight: '500 g', price: 160, inStock: true },
+    { weight: '250 g', price: 90, inStock: true },
+  ],
+  'lahsoon-achaar-500gm': [
+    { weight: '1 Kg', price: 510, inStock: true },
+    { weight: '500 g', price: 380, inStock: true },
+    { weight: '250 g', price: 120, inStock: true },
+  ],
+  'kathal-aachar-500gm': [
+    { weight: '1 Kg', price: 410, inStock: true },
+    { weight: '500 g', price: 320, inStock: true },
+    { weight: '250 g', price: 180, inStock: true },
+  ],
+  'amla-murabba-500gm': [
+    { weight: '1 Kg', price: 360, inStock: true },
+    { weight: '500 g', price: 250, inStock: true },
+  ],
+  'amla-aachar-400gm': [
+    { weight: '1 Kg', price: 410, inStock: true },
+    { weight: '500 g', price: 320, inStock: true },
+  ],
+  'karela-aachar-500gm': [
+    { weight: '1 Kg', price: 410, inStock: true },
+    { weight: '500 g', price: 320, inStock: true },
+    { weight: '250 g', price: 180, inStock: true },
+  ],
+  'hing-aam-aachar-500gm': [
+    { weight: '1 Kg', price: 480, inStock: true },
+    { weight: '500 g', price: 310, inStock: true },
+    { weight: '250 g', price: 180, inStock: true },
+  ],
+  'lal-mirch-500gm': [
+    { weight: '1 Kg', price: 480, inStock: true },
+    { weight: '500 g', price: 310, inStock: true },
+    { weight: '250 g', price: 180, inStock: true },
+  ],
+};
+
+const CHART_NAMES: Record<string, string> = {
+  'aam-achaar': 'Mango Pickle',
+  'sukha-aam-300gm': 'Mango Dry Pickle',
+  'nimbu-achaar': 'Nimbu Pickle',
+  'meetha-nimbu': 'Meetha Nimbu',
+  'aam-lachedaar-chatuny-500gm': 'Mango Lachedhar Chutney',
+  'hari-mirch': 'Hari Mirch',
+  'mix-achaar-500gm': 'Mix',
+  'lahsoon-achaar-500gm': 'Lahsoon',
+  'kathal-aachar-500gm': 'Kathal',
+  'amla-murabba-500gm': 'Amla Murabba',
+  'amla-aachar-400gm': 'Amla Achar',
+  'karela-aachar-500gm': 'Karela',
+  'hing-aam-aachar-500gm': 'Aam Hing',
+  'lal-mirch-500gm': 'Lal Mirch',
+};
+
 // Helper mapper to output your full Product schema cleanly
 const makeProduct = (p: ProductSeed, index: number): Product => ({
   id: p.id,
-  name: p.name,
+  name: CHART_NAMES[p.id] ?? p.name,
   hindiName: p.hindiName ?? '',
   tagline: p.description,
   description: p.description,
   category: p.category,
   categoryLabel: p.categoryLabel,
-  price: p.price,
-  originalPrice: p.originalPrice,
-  weight: p.weight,
-  variants: [
+  price: (CHART_VARIANTS[p.id] ?? [])[0]?.price ?? p.price,
+  originalPrice: (CHART_VARIANTS[p.id] ?? [])[0]?.originalPrice ?? p.originalPrice,
+  weight: (CHART_VARIANTS[p.id] ?? [])[0]?.weight ?? p.weight,
+  variants: CHART_VARIANTS[p.id] ?? [
     {
       weight: p.weight,
       price: p.price,

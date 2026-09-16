@@ -30,6 +30,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   ) || {
     price: product.price,
     originalPrice: product.originalPrice,
+    scheme: undefined,
   };
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -61,6 +62,14 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             loading="lazy"
           />
 
+          {currentVariant.scheme && (
+            <div className="absolute inset-x-3 bottom-3 z-10 flex justify-center optional:to-100 lg:opacity-0 translate-y-2 lg:group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
+              <span className="rounded-full bg-[#103C26]/95 px-3 py-1.5 text-sm font-semibold text-[#FAF7F0] shadow-lg">
+                OFFER : {currentVariant.scheme}
+              </span>
+            </div>
+          )}
+
           {/* Top Badges: Veg mark & Spice tag */}
           <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
             {/* Standard Indian 100% Veg Mark */}
@@ -76,7 +85,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {product.spiceLevel}
             </span>
           </div>
-
           {/* Wishlist and Quick View Action Overlay */}
           <div className="absolute top-3 right-3 flex flex-col gap-1.5 z-10">
             {/* Wishlist */}

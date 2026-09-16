@@ -2,6 +2,7 @@ export interface ProductVariant {
   weight: string; // e.g. "250g", "500g", "1kg"
   price: number; // in INR ₹
   originalPrice?: number;
+  scheme?: string;
   inStock: boolean;
 }
 
