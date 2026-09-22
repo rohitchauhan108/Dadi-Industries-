@@ -14,6 +14,12 @@ export const HomepageBanners: React.FC = () => {
   const { setCurrentView, setSelectedCategory } = useShop();
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  const handleHeroCta = (category: string) => {
+    const categoryId = category === 'chutney_masala' ? 'chutney' : 'aachar';
+    setSelectedCategory(categoryId);
+    setCurrentView('shop');
+  };
+
   const heroSliderBanners = [
     {
       id: 1,
@@ -101,6 +107,7 @@ export const HomepageBanners: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3.5 pt-3">
                 <button
+                  onClick={() => handleHeroCta(slide.category)}
                   className="bg-[#C69D32] hover:bg-[#E8C86A] text-[#0B2819] px-7 sm:px-9 py-4 rounded-full font-serif font-bold text-sm sm:text-base shadow-lg transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2.5"
                 >
                   <span>{slide.ctaText}</span>
@@ -179,10 +186,10 @@ export const HomepageBanners: React.FC = () => {
               Whether it’s hot ghee aloo parathas, comforting dal chawal, or evening khichdi — a single spoon elevates ordinary meals to a royal feast.
             </p>
             <button
-              // onClick={() => {
-              //   setSelectedCategory('all');
-              //   setCurrentView('shop');
-              // }}
+              onClick={() => {
+                setSelectedCategory('all');
+                setCurrentView('shop');
+              }}
               className="inline-flex items-center gap-2.5 text-sm sm:text-base font-serif font-bold text-[#E8C86A] group-hover:text-white transition-colors cursor-pointer pt-1"
             >
               <span>Explore All 12 Flavours</span>
