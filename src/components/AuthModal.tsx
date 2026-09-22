@@ -14,7 +14,6 @@ export const AuthModal: React.FC = () => {
     signUp,
     verifySignUpOtp,
     resendSignUpOtp,
-    setCurrentView,
   } = useShop();
 
   const [mode, setMode] = useState<'signin' | 'signup'>(authModalMode);
@@ -58,10 +57,8 @@ export const AuthModal: React.FC = () => {
     const ok = await signIn(signInIdentifier, signInPassword);
     setIsSubmitting(false);
     if (ok) {
-      const returnPath = localStorage.getItem('dadi_auth_return_to');
-      localStorage.removeItem('dadi_auth_return_to');
-      closeAuthModal();
-      setCurrentView(returnPath === '/checkout' ? 'checkout' : 'account');
+      setSignInIdentifier('');
+      setSignInPassword('');
     }
   };
 
@@ -74,9 +71,8 @@ export const AuthModal: React.FC = () => {
       setVerificationEmail(email.trim());
       setVerificationCode('');
     } else if (result === 'verified') {
-      const returnPath = localStorage.getItem('dadi_auth_return_to');
-      localStorage.removeItem('dadi_auth_return_to');
-      setCurrentView(returnPath === '/checkout' ? 'checkout' : 'account');
+      setName(''); setEmail(''); setSignUpPassword(''); setPhone('');
+      setAddress(''); setCity(''); setStateVal('Uttarakhand'); setPincode('');
     }
   };
 
@@ -86,9 +82,8 @@ export const AuthModal: React.FC = () => {
     const ok = await verifySignUpOtp(verificationEmail, verificationCode);
     setIsSubmitting(false);
     if (ok) {
-      const returnPath = localStorage.getItem('dadi_auth_return_to');
-      localStorage.removeItem('dadi_auth_return_to');
-      setCurrentView(returnPath === '/checkout' ? 'checkout' : 'account');
+      setVerificationEmail('');
+      setVerificationCode('');
     }
   };
 

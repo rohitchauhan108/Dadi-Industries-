@@ -172,7 +172,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const selectedProductId: string | null = derived.productId;
 
   const setCurrentView = (view: ViewType) => {
-    if (view === 'checkout' && !authLoading && !user) {
+    if (view === 'checkout' && !authLoading && !user && !justAuthenticatedRef.current) {
       if (typeof window !== 'undefined') localStorage.setItem('dadi_auth_return_to', '/checkout');
       openAuthModal('signin');
       showToast('Please sign in before checkout.', 'warning');
@@ -229,6 +229,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [backendCartItemCount, setBackendCartItemCount] = useState(0);
   const cartLoadStarted = useRef(false);
   const cartSaveQueue = useRef(Promise.resolve());
+  const justAuthenticatedRef = useRef(false);
 
   const [wishlist, setWishlist] = useState<string[]>(() => {
     if (typeof window === 'undefined') return [];
@@ -376,7 +377,14 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const loadCart = async () => {
       try {
         const response = await fetch(`${API_URL}/api/cart`, { headers: { 'x-cart-id': cartId, ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}) } });
-        if (!response.ok) throw new Error('cart fetch failed');
+        if (!response.ok) {
+          let message = `cart fetch failed (HTTP ${response.status})`;
+          try {
+            const errData = await response.json();
+            if (errData?.message) message = errData.message;
+          } catch { /* ignore body read errors */ }
+          throw new Error(message);
+        }
         const data = await response.json();
         const hydrated = (data.items || []).flatMap((item: { productId: string; weight: string; quantity: number }) => {
           const product = products.find(entry => entry.id === item.productId);
@@ -453,7 +461,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   useEffect(() => {
-    if (pathname !== '/checkout' || authLoading || user) return;
+    if (pathname !== '/checkout' || authLoading || user || justAuthenticatedRef.current) return;
     if (typeof window !== 'undefined') localStorage.setItem('dadi_auth_return_to', '/checkout');
     router.replace('/');
     openAuthModal('signin');
@@ -461,9 +469,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [pathname, authLoading, user]);
 
   const persistSession = (token: string, profile: UserProfile) => {
+    justAuthenticatedRef.current = true;
     setAuthToken(token);
     setUser(profile);
     if (typeof window !== 'undefined') localStorage.setItem('dadi_token', token);
+    setTimeout(() => { justAuthenticatedRef.current = false; }, 2000);
   };
 
   const signIn = async (email: string, password: string): Promise<boolean> => {
@@ -486,6 +496,13 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       persistSession(data.token, data.user);
       setIsAuthModalOpen(false);
       showToast(`Welcome back, ${data.user.name}!`, 'success');
+      setTimeout(() => {
+        const returnPath = typeof window !== 'undefined' ? localStorage.getItem('dadi_auth_return_to') : null;
+        if (returnPath) {
+          localStorage.removeItem('dadi_auth_return_to');
+          router.push(returnPath);
+        }
+      }, 0);
       return true;
     } catch (err) {
       showToast('Unable to sign in right now. Please try again.', 'warning');
@@ -572,6 +589,13 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       persistSession(data.token, data.user);
       setIsAuthModalOpen(false);
       showToast(`Namaste ${data.user.name}! Your Dadi Industries account is ready.`, 'success');
+      setTimeout(() => {
+        const returnPath = typeof window !== 'undefined' ? localStorage.getItem('dadi_auth_return_to') : null;
+        if (returnPath) {
+          localStorage.removeItem('dadi_auth_return_to');
+          router.push(returnPath);
+        }
+      }, 0);
       return 'verified';
     } catch (err) {
       showToast('Unable to create your account right now. Please try again.', 'warning');
@@ -594,6 +618,13 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       persistSession(data.token, data.user);
       setIsAuthModalOpen(false);
       showToast(`Namaste ${data.user.name}! Your Dadi Industries account is ready.`, 'success');
+      setTimeout(() => {
+        const returnPath = typeof window !== 'undefined' ? localStorage.getItem('dadi_auth_return_to') : null;
+        if (returnPath) {
+          localStorage.removeItem('dadi_auth_return_to');
+          router.push(returnPath);
+        }
+      }, 0);
       return true;
     } catch {
       showToast('Unable to verify your account right now.', 'warning');

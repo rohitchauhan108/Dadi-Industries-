@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useShop } from '../context/ShopContext';
 import { WhatsAppIcon } from './WhatsAppIcon';
 import { createWhatsAppInquiryUrl, openWhatsApp, WHATSAPP_DISPLAY_PHONE } from '../utils/whatsapp';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, ExternalLink, Sparkles } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, CheckCircle2, ExternalLink, Sparkles, Loader2 } from 'lucide-react';
+
+const API_URL = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000').replace(/\/+$/, '');
 
 export const ContactPage: React.FC = () => {
   const { showToast } = useShop();
-  
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -15,17 +17,39 @@ export const ContactPage: React.FC = () => {
     message: ''
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.message) {
       showToast('Please fill in your name, phone number, and message.', 'warning');
       return;
     }
 
-    setIsSubmitted(true);
-    showToast('Message sent! Dadi Industries team will contact you shortly.', 'success');
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`${API_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          phone: formData.phone.trim(),
+          email: formData.email.trim(),
+          inquiryType: formData.inquiryType,
+          message: formData.message.trim()
+        })
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data?.message || 'Unable to send message right now.');
+      setIsSubmitted(true);
+      showToast(data?.message || 'Message sent! Dadi Industries team will contact you shortly.', 'success');
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : 'Unable to send message right now.';
+      showToast(msg, 'warning');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const address = "Harbazwala, near Kanti Mart, Sainik Colony, Dehradun 248001";
@@ -158,10 +182,20 @@ export const ContactPage: React.FC = () => {
 
                 <button
                   type="submit"
-                  className="w-full flex items-center justify-center gap-2 bg-[#103C26] hover:bg-[#0B2819] text-[#FAF7F0] py-3.5 px-6 rounded-xl font-serif font-bold text-sm transition-all shadow-md active:scale-95 cursor-pointer border border-[#C69D32]/40"
+                  disabled={isSubmitting}
+                  className="w-full flex items-center justify-center gap-2 bg-[#103C26] hover:bg-[#0B2819] disabled:opacity-60 disabled:cursor-not-allowed text-[#FAF7F0] py-3.5 px-6 rounded-xl font-serif font-bold text-sm transition-all shadow-md active:scale-95 cursor-pointer border border-[#C69D32]/40"
                 >
-                  <Send className="w-4 h-4 text-[#E8C86A]" />
-                  <span>Send Message to Dadi Industries</span>
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-4 h-4 text-[#E8C86A] animate-spin" />
+                      <span>Sending message…</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 text-[#E8C86A]" />
+                      <span>Send Message to Dadi Industries</span>
+                    </>
+                  )}
                 </button>
               </form>
             )}
