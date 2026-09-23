@@ -586,8 +586,8 @@ const CHART_VARIANTS: Record<string, ProductVariant[]> = {
   ],
   'sukha-aam-300gm': [
     { weight: '1 Kg', price: 330, inStock: true },
-    { weight: '500 g', price: 170, inStock: true },
-    { weight: '250 g', price: 85, inStock: true },
+    { weight: '500 g', price: 130, inStock: true },
+    // { weight: '250 g', price: 85, inStock: true },
   ],
   'nimbu-achaar': [
     { weight: '1 Kg', price: 205, inStock: true },
