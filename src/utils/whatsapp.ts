@@ -1,6 +1,6 @@
 import { Product, CartItem } from '../types';
 
-export const WHATSAPP_PHONE = '91863000405';
+export const WHATSAPP_PHONE = '918630000405';
 export const WHATSAPP_DISPLAY_PHONE = '+91 86300 00405';
 
 /**
